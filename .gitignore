@@ -22,4 +22,5 @@
 go.work
 
 # Project specific
-ruflood
+ruflood-linux-386
+ruflood-linux-amd64

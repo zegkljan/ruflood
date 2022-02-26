@@ -4,6 +4,10 @@ Inspired by https://vug.pl/takeRussiaDown.html, a DDoS attack on russian state-o
 This is a version compiled to a separate program so it run without a browser and possibly more efficient.
 Also allows scaling the power (see Advanced usage).
 
+## Download
+
+Head over to [Releases](https://github.com/zegkljan/ruflood/releases).
+
 ## Build it yourself
 
 1. Install [Go](https://go.dev/).
