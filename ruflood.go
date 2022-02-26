@@ -44,19 +44,19 @@ type Target struct {
 }
 
 var defaultTargets = []string{
-	"https://lenta.ru/", // newspaper, owned by sberbank
-	"https://ria.ru/",   // state-owned news agency
+	"https://lenta.ru/search?query=ukraia", // newspaper, owned by sberbank
+	"https://ria.ru/search/?query=ukraina",   // state-owned news agency
 	"https://ria.ru/lenta/",
-	"https://www.rbc.ru/",
+	"https://www.rbc.ru/search/?query=ukraina",
 	"https://www.rt.com/", // state-controlled TV network (formerly Russia Today)
 	"http://kremlin.ru/",
 	"http://en.kremlin.ru/",
-	"https://smotrim.ru/",
-	"https://tass.ru/",     // state-controlled news agency
-	"https://tvzvezda.ru/", // army-/MoD-controlled TV station
-	"https://vsoloviev.ru/",
-	"https://www.1tv.ru/",
-	"https://www.vesti.ru/",
+	"https://smotrim.ru/search?q=ukraina",
+	"https://tass.ru/search?searchStr=EC&sort=date",     // state-controlled news agency
+	"https://tvzvezda.ru/search/?q=UKRAINA", // army-/MoD-controlled TV station
+	"https://vsoloviev.ru/search/?Search=ukraina",
+	"https://www.1tv.ru/search?from=1995-01-01&to=2099-02-26&q=text%3AH",
+	"https://www.vesti.ru/search?q=H",
 	"https://sberbank.ru/", // biggest russian bank
 	"https://online.sberbank.ru/",
 	"https://rkn.gov.ru/", // state bureau for media oversight
