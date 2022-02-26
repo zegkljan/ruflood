@@ -10,6 +10,8 @@ Head over to [Releases](https://github.com/zegkljan/ruflood/releases).
 
 ## Build it yourself
 
+You only need to do this if you don't trust the precompiled binaries and/or you want to modify the code.
+
 1. Install [Go](https://go.dev/).
 2. Clone/download this repository.
 3. Navigate to the folder where you have downloaded it, and run `go build`.
@@ -33,4 +35,4 @@ ruflood [-c | --max-concurrent-requests c] [-r | --request-timeout r] [-i | --pr
 `-i | --print-interval i` sets the interval at which overall statistics about the flood is printed out. 0 (zero) turns the printing off completely. Must be >= 0. Default is 1000.
 
 ---
-\* all websites from https://vug.pl/takeRussiaDown.html plus https://rkn.gov.ru/, a russian bureau for media oversight, known for basically censoring media that do not fall in line with state-dictated narrative.
+\* all websites from https://vug.pl/takeRussiaDown.html plus https://rkn.gov.ru/ - Roskomnadzor - a russian bureau for media oversight, known for basically censoring media that do not fall in line with state-dictated narrative.
